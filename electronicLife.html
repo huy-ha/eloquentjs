@@ -186,13 +186,13 @@
 			return randomElement(found);
 		};
 
-		var world = new World(plan,{"#": Wall,"o":BouncingCritter});
-		console.log(world.toString());
+		// var world = new World(plan,{"#": Wall,"o":BouncingCritter});
+		// console.log(world.toString());
 
-		for(var i = 0; i < 5; i++){
-			world.turn();
-			console.log(world.toString());
-		}
+		// for(var i = 0; i < 5; i++){
+		// 	world.turn();
+		// 	console.log(world.toString());
+		// }
 
 		//WallFollower critter
 		function dirPlus(dir,n){
@@ -301,7 +301,42 @@
 			var plant = context.find("*");
 			if(plant)
 				return {type:"eat", direction:plant};
+			if(space)
+				return {type: "move", direction: space};
 		};
+
+		var valley = new lifeLikeWorld(
+						  ["############################",
+						   "#####                 ######",
+						   "##   ***                **##",
+						   "#   *##**         **  O  *##",
+						   "#    ***     O    ##**    *#",
+						   "#       O         ##***    #",
+						   "#                 ##**     #",
+						   "#   O       #*             #",
+						   "#*          #**       O    #",
+						   "#***        ##**    O    **#",
+						   "##****     ###***       *###",
+						   "############################"],
+						  {"#": Wall,
+						   "O": PlantEater,
+						   "*": Plant}
+						);
+
+		// console.log(valley.toString());
+
+		// for(var i = 0; i < 500; i++){
+		// 	valley.turn();
+		// 	console.log(valley.toString());
+		// }
+
+		function animate(){
+			valley.turn();
+			console.log(valley.toString());
+		};
+
+		setInterval(animate,500);
+
 
 
 		
