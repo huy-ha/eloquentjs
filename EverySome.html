@@ -1,0 +1,28 @@
+<html>
+<script type="text/javascript">
+	
+
+	function every(array,test){
+		for(let i = 0; i < array.length; i++){
+			if(!test(array[i]))
+				return false;
+		}
+		return true;
+	}
+
+	function some(array,test){
+		for(let i = 0; i < array.length;i++){
+			if(test(array[i]))
+				return true;
+		}
+		return false;
+	}
+
+
+	var arr = [0,2,4,6,8,10];
+
+	console.log(some(arr,function(x){
+		return x % 2 === 1;
+	}));
+</script>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>A Vector Type</title>
+</head>
+<body>
+<script type="text/javascript">
+	function Vector(x,y){
+		this.x = x;
+		this.y = y;
+	};
+
+	Vector.prototype.plus = function( v){
+		return new Vector(this.x + v.x, this.y + v.y);
+	};
+
+	Vector.prototype.minus = function (v) {
+		return new Vector(this.x - v.x , this.y - v.y);
+	};
+
+	//adding getter method for 
+	Object.defineProperty(Vector.prototype, 'length' , {
+		get: function() {
+			return Math.sqrt(this.x*this.x + this.y+this.y);
+		}
+	});
+
+	v1 = new Vector(2,4);
+	v2 = new Vector(-1,5);
+
+	console.log(v1.plus(v2).plus(v1));
+</script>
+</body>
+</html>

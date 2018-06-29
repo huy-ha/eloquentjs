@@ -1,0 +1,25 @@
+<html>
+<script type="text/javascript">
+	//compute average
+	function average(array) {
+	  function plus(a, b) { return a + b; }
+	  return array.reduce(plus) / array.length;
+	}
+
+	//find what century people are supposed to be in 
+	//all in one array 
+	function averageAgeByCentury(year){
+		return average(ancestry.filter(function(person){
+			return Math.ceil(person.died/100) == year;
+		}).map(function(person){
+			return person.died - person.born
+		})
+		)
+	};
+	
+	console.log(averageAgeByCentury(16));
+	console.log(averageAgeByCentury(17));
+	console.log(averageAgeByCentury(18));
+	console.log(averageAgeByCentury(19));
+</script>
+</html>
