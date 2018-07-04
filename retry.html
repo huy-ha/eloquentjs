@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Retry</title>
+</head>
+<script type="text/javascript">
+	function MultiplicatorUnitFailure() {
+		this.stack = (new Error()).stack;
+	}
+
+	MultiplicatorUnitFailure.prototype = Object.create(Error.prototype);
+	MultiplicatorUnitFailure.prototype.name = "MultiplicatorUnitFailure";
+
+	function primitiveMultiply(a, b) {
+	  if (Math.random() < 0.5)
+	    return a * b;
+	  else
+	    throw new MultiplicatorUnitFailure();
+	}
+
+	function reliableMultiply(a, b) {
+	  try{
+	  	let result = primitiveMultiply(a,b);
+	  	console.log("success!");
+	  	return result;
+	  }catch(e){
+	  	if(e instanceof MultiplicatorUnitFailure){
+	  		console.log("MultiplicatorUnitFailure error. Trying again multiply " + a + " " + b);
+	  		return reliableMultiply(a,b);
+	  	}else
+	  		throw e;
+	  	}
+	}
+
+	console.log(reliableMultiply(8, 8));
+</script>
+<body>
+
+</body>
+</html>
