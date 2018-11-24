@@ -107,6 +107,58 @@ function handle_album_request(req,res){
 	});
 }
 
+function handle_rename_album(req,res){
+	var core_url = req.parsed_url.pathname;
+	var parts = core_url.split('/');
+
+	if (parts.length != 4){
+		send_failure(res,404,invalid_resource());
+		return;
+	}
+
+	var album_name = parts[2];
+
+	var json_body = '';
+	
+	req.on('readable', ()=>{
+		var d = req.read();
+		if(d){
+			if(typeof d === 'string')
+				json_body+=d;
+			else if(typeof d === 'object' && d instanceOf Buffer)
+				json_body += d.toString('utf8');
+		}
+	});
+
+	req.on('end',()=>{
+		if(json_body){
+			try{
+				var album_data = JSON.parse(json_body);
+				if(!album_data.album_name){
+					send_failure(res,404,missing_data('album_name'));
+					return;
+				}
+			}catch(e){
+				send_failure(res,403,bad_json());
+				return;
+			}
+			do_rename(album_name, album_data.album_name, (err,results) =>{
+				if(err && err.code === "ENOENT"){
+					send_failure(res,403,no_such_album());
+					return;
+				}else if(err){
+					send_failure(res,500,file_error(err));
+					return;
+				}
+				send_success(res,null);
+			});
+		}else{
+			send_failure(res,403,bad_json());
+			res.end();
+		}
+	});
+}
+
 function make_error(err,msg){
 	var e = new Error(msg);
 	e.code = err;
@@ -142,6 +194,8 @@ function handle_incoming_request(req,res){
 	console.log("Incoming request: " + req.method + " " + req.url);
 	if(core_url ==  "/albums.json"){
 		handle_album_list_request(req,res);
+	}else if(core.url.substr(core_url.length-12) === '/rename.json' && req.method.toLowerCase() === 'post'){
+		handle_rename_album(req,res);
 	}else if(core_url.substr(0,7) === "/albums" && core_url.substr(core_url.length-5) === '.json'){
 		handle_album_request(req,res);
 	}else{
